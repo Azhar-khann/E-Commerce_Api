@@ -1,14 +1,19 @@
 const express = require('express');
 const app = express();
 const session = require("express-session");
-const productsRouter = require('./routes/products')
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 const pool = require('./db/connect_to_db');
 const passwordHash = require('./utils/helper_functions');
-
 app.use(express.json());
+
+const productsRouter = require('./routes/products')
+app.use('/products', productsRouter);
+
+const usersRouter = require('./routes/users')
+app.use('/users',usersRouter)
+
 
 
 const store = new session.MemoryStore();
@@ -67,7 +72,7 @@ passport.use(new LocalStrategy(
 ));  
 
 
-app.use('/products', productsRouter);
+
 
 
 app.get('/', (req, res) => {
