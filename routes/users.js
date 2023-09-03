@@ -2,6 +2,8 @@ const express = require('express');
 const usersRouter = express.Router();
 const pool = require('../db/connect_to_db');
 
+
+// get all users
 usersRouter.get('/' , (req, res) => {
 
     pool.query('SELECT * FROM users', (error, results) => {
@@ -13,6 +15,7 @@ usersRouter.get('/' , (req, res) => {
     })
 });
 
+//get user by id
 usersRouter.get('/:id' , (req, res) => {
 
     const id  = req.params.id;
@@ -31,6 +34,7 @@ usersRouter.get('/:id' , (req, res) => {
     })
 });
 
+//create user
 usersRouter.post('/' , (req, res) => {
 
     const {username,password} = req.body;
@@ -44,6 +48,8 @@ usersRouter.post('/' , (req, res) => {
     })
 });
 
+
+// update user name and password
 usersRouter.put('/:id' , (req, res) => {
 
     const id  = req.params.id;
@@ -64,6 +70,7 @@ usersRouter.put('/:id' , (req, res) => {
     })
 });
 
+// delete user
 usersRouter.delete('/:id' , (req, res) => {
 
     const id  = req.params.id;

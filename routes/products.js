@@ -2,6 +2,8 @@ const express = require('express');
 const productsRouter = express.Router();
 const pool = require('../db/connect_to_db')
 
+
+// get all products
 productsRouter.get('/' , (req, res) => {
     pool.query('SELECT * FROM products', (error, results) => {
         if (error) {
@@ -11,6 +13,8 @@ productsRouter.get('/' , (req, res) => {
     })
 });
 
+
+//get product by id
 productsRouter.get('/:id' , (req, res) => {
 
   const id = parseInt(req.params.id)
@@ -26,6 +30,8 @@ productsRouter.get('/:id' , (req, res) => {
   })
 });
 
+
+//get product based on category
 productsRouter.get('/category/:category' , (req, res) => {
 
   const category = req.params.category
@@ -41,6 +47,8 @@ productsRouter.get('/category/:category' , (req, res) => {
   })
 });
 
+
+// create product
 productsRouter.post('/' , (req, res) => {
 
   const {brand,name,category,gender,price,image} = req.body;
@@ -53,6 +61,8 @@ productsRouter.post('/' , (req, res) => {
   })
 });
 
+
+//update a product
 productsRouter.put('/:id' , (req, res) => {
 
   const id  = req.params.id;
@@ -71,7 +81,7 @@ productsRouter.put('/:id' , (req, res) => {
   })
 });
 
-
+// delete a product
 productsRouter.delete('/:id' , (req, res) => {
 
   const id  = req.params.id;

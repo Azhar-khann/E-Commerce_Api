@@ -12,7 +12,10 @@ const productsRouter = require('./routes/products')
 app.use('/products', productsRouter);
 
 const usersRouter = require('./routes/users')
-app.use('/users',usersRouter)
+app.use('/users',usersRouter);
+
+const cartRouter = require('./routes/cart')
+app.use('/cart', cartRouter)
 
 
 
@@ -99,6 +102,8 @@ app.post("/register", async (req, res) => {
 app.post('/login',passport.authenticate("local"), (req, res) => {
   res.status(200).send('Successfully Authenticated')
 });
+
+
 
 app.listen(3000, () => {
   console.log('Server listening on port 3000');
