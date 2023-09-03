@@ -1,23 +1,20 @@
 const express = require('express');
 const cartRouter = express.Router();
 const pool = require('../db/connect_to_db');
+const validateCreditCard = require('../utils/helper_functions').validateCreditCard
+const createOrder = require('../utils/helper_functions').createOrder
 
-cartRouter.get('/' , (req, res) => {
 
-    pool.query('SELECT * FROM cart', (error, results) => {
-
-        if (error) {
-          res.status(500).json({ error: 'Internal Server Error' });
-        }
-        res.status(200).json(results.rows)
-    })
-});
-
+const query = `select name,size,price,image from cart join product_sizes 
+    on cart.product_size_id = product_sizes.id 
+    join products
+    on  product_sizes.product_id = products.id 
+    where user_id = $1`
 
 //get items in users cart
-cartRouter.get('/user/:id' , (req, res) => {
+cartRouter.get('/user/:user_id' , (req, res) => {
 
-    const id  = req.params.id;
+    const id  = req.params.user_id;
     const query = `select name,size,price,image from cart join product_sizes 
     on cart.product_size_id = product_sizes.id 
     join products
@@ -94,5 +91,29 @@ cartRouter.delete('/user/:user_id/:product_size_id' , (req, res) => {
         res.status(200).send('cart deleted successfully')
     })
 });
+
+
+cartRouter.get('/user/checkout/:user_id', (req, res) => {
+
+    const user_id  = req.params.user_id;
+    const {date} = req.body;
+    const { cardNumber, expirationMonth, expirationYear, cvv } = req.body;
+    const isValidCreditCard = validateCreditCard(cardNumber, expirationMonth, expirationYear, cvv);
+
+    pool.query(query, [user_id], (error, results) => {
+
+        if (results.rowCount === 0) {
+            return res.status(404).send( 'no items in cart' );
+        }
+        if (isValidCreditCard === true){
+            createOrder(user_id,date)
+            return res.status(200).send( 'Checkout successfull. Order successfully added in user account' );
+        }
+        else{
+            return res.status(404).send( 'invalid card details' );
+        }
+
+    })
+})
 
 module.exports = cartRouter;

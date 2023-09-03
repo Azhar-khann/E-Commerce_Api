@@ -17,6 +17,9 @@ app.use('/users',usersRouter);
 const cartRouter = require('./routes/cart')
 app.use('/cart', cartRouter)
 
+const ordersRouter = require('./routes/orders')
+app.use('/order', ordersRouter)
+
 
 
 const store = new session.MemoryStore();
