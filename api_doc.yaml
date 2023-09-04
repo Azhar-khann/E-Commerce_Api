@@ -1,0 +1,510 @@
+openapi: 3.0.0
+info:
+  title: E-Commerce API
+  description: API for registering users, logging them and managing user accounts, products, carts, and orders in an e-commerce store.
+  version: 1.0.0
+paths:
+  /register:
+    post:
+      summary: Register a new user
+      tags:
+        - Registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+        '500':
+          description: Unable to create user
+  /login:
+    post:
+      summary: Log in with username and password
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: User logged in successfully
+        '401':
+          description: Incorrect username or password
+
+
+
+  /products:
+    get:
+      summary: Get all products
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Successfully retrieved products
+          content:
+            application/json:
+              examples:
+                products_example:
+                  value:
+                    - id: 3
+                      brand: Nike
+                      name: Air max
+                      category: Running
+                      gender: Female
+                      price: 130
+                      image: nike_image_url
+                    - id: 2
+                      brand: Nike
+                      name: Zoom Pegasus 38
+                      category: Running
+                      gender: Female
+                      price: 130
+                      image: nike_image_url
+        '500':
+          description: Internal Server Error
+    
+    post:
+      summary: Create a new product
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand:
+                  type: string
+                name:
+                  type: string
+                category:
+                  type: string
+                gender:
+                  type: string
+                price:
+                  type: number
+                image:
+                  type: string
+      responses:
+        '200':
+          description: Product successfully added
+        '500':
+          description: Internal Server Error
+
+  /products/{id}:
+    get:
+      summary: Get a product by ID
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved products
+          content:
+            application/json:
+              examples:
+                products_example:
+                  value:
+                    - id: 2
+                      brand: Nike
+                      name: Zoom Pegasus 38
+                      category: Running
+                      gender: Female
+                      price: 130
+                      image: nike_image_url
+        '500':
+          description: Internal Server Errorr
+
+    put:
+      summary: Update a product by ID
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand:
+                  type: string
+                name:
+                  type: string
+                category:
+                  type: string
+                gender:
+                  type: string
+                price:
+                  type: number
+                image:
+                  type: string
+      responses:
+        '200':
+          description: Product updated successfully
+        '404':
+          description: Product not found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a product by ID
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Product deleted successfully
+        '404':
+          description: Product not found
+        '500':
+          description: Internal Server Error
+          
+          
+  
+  
+          
+  /users:
+    get:
+      summary: Get all users
+      tags:
+        - Users
+      responses:
+        '200':
+          description: Successfully retrieved users
+          content:
+            application/json:
+              examples:
+                users_example:
+                  value:
+                    - id: 8
+                      username: Ahmad
+                      password: "$2b$10$1Sb1z1qLXS9nCJbop7diAuB1kauNSOdP7GvwDmbu0yeqx.Q9MsGH6"
+                    - id: 9
+                      username: Ali
+                      password: "$2b$10$RdMVBEBfbMNO0n72oGouw.AE76DSXiT0XPf/wTZGfgopaCeGejFZS"
+        '500':
+          description: Internal Server Error
+
+    post:
+      summary: Create a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: User successfully added
+        '500':
+          description: Internal Server Error
+
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved the user
+          content:
+            application/json:
+              examples:
+                user_example:
+                  value:
+                    - id: 1
+                      username: John
+                      password: Forestgump
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update a user by ID
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: User updated successfully
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete a user by ID
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User deleted successfully
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+  
+  
+  
+  
+  
+          
+  /cart/user/{user_id}:
+    get:
+      summary: Get items in the user's cart
+      tags:
+        - Cart
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved items in the cart
+          content:
+            application/json:
+              examples:
+                cart_example:
+                  value:
+                    - name: Zoom Pegasus 38
+                      size: 7.5
+                      price: 130
+                      image: nike_image_url
+                    - name: Zoom Pegasus 38
+                      size: 8.5
+                      price: 130
+                      image: nike_image_url
+        '404':
+          description: Cart not found
+        '500':
+          description: Internal Server Error
+
+    post:
+      summary: Add products to the user's cart
+      tags:
+        - Cart
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_size_id:
+                  type: integer
+      responses:
+        '200':
+          description: Product successfully added to the user's cart
+        '500':
+          description: Internal Server Error
+          
+  /cart/user/{user_id}/{existing_product_size_id}/{new_product_size_id}:
+    put:
+      summary: Change a product in the user's cart
+      tags:
+        - Cart
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: existing_product_size_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: new_product_size_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User's cart updated successfully
+        '404':
+          description: Cart not found
+        '500':
+          description: Internal Server Error
+          
+  /cart/user/{user_id}/{product_size_id}:
+    delete:
+      summary: Delete a product from the user's cart
+      tags:
+        - Cart
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: product_size_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Product deleted from the user's cart successfully
+        '404':
+          description: Cart not found
+        '500':
+          description: Internal Server Error
+
+  /cart/user/checkout/{user_id}:
+    post:
+      summary: Checkout the user's cart
+      tags:
+        - Cart
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                cardNumber:
+                  type: string
+                expirationMonth:
+                  type: string
+                expirationYear:
+                  type: string
+                cvv:
+                  type: string
+      responses:
+        '200':
+          description: Cart checked out successfully
+        '404':
+          description: No items in the cart
+        '500':
+          description: Internal Server Error
+          
+          
+          
+  /orders/user/{user_id}:
+    get:
+      summary: Get user's orders
+      tags:
+        - Orders
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved user's orders
+          content:
+            application/json:
+              examples:
+                orders_example:
+                  value:
+                    - order_id: 34
+                      items:
+                        - name: Wool Runners
+                          size: 8.0
+                          price: 95
+                          image: allbirds_image_url
+                          date: "2023-09-27T19:00:00.000Z"
+                    - order_id: 35
+                      items:
+                        - name: Superstar
+                          size: 9.0
+                          price: 100
+                          image: adidas_image_url
+                          date: "2023-09-27T19:00:00.000Z"
+                        - name: Superstar
+                          size: 9.5
+                          price: 100
+                          image: adidas_image_url
+                          date: "2023-09-27T19:00:00.000Z"
+        '404':
+          description: No orders found
+        '500':
+          description: Internal Server Error

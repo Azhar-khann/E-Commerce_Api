@@ -7,7 +7,7 @@ const pool = require('../db/connect_to_db')
 productsRouter.get('/' , (req, res) => {
     pool.query('SELECT * FROM products', (error, results) => {
         if (error) {
-          return res.status(500).json({ error: 'Internal Server Error' });
+          return res.status(500).send('Internal Server Error' );
         }
         res.status(200).json(results.rows)
     })
@@ -21,10 +21,10 @@ productsRouter.get('/:id' , (req, res) => {
 
   pool.query('SELECT * FROM products where id = $1', [id], (error, results) => {
       if (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).send('Internal Server Error' );
       }
       if (results.rowCount === 0) {
-        return res.status(404).json({ message: 'Product not found' });
+        return res.status(404).send('Product not found' );
       }
       res.status(200).json(results.rows)
   })
@@ -38,7 +38,7 @@ productsRouter.get('/category/:category' , (req, res) => {
 
   pool.query('SELECT * FROM products where category = $1', [category], (error, results) => {
       if (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).send('Internal Server Error' );
       }
       if (results.rows.length === 0){
         return res.status(404).send('No products found for the specified category');
@@ -55,14 +55,14 @@ productsRouter.post('/' , (req, res) => {
 
   pool.query('INSERT INTO products (brand,name,category,price,image) VALUES ($1, $2, $3, $4, $5)', [brand,name,category,gender,price,image], (error, results) => {
       if (error) {
-        return res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).send('Internal Server Error' );
       }
-      res.status(200).json('product successfully added')
+      res.status(200).send('product successfully added')
   })
 });
 
 
-//update a product
+//update a product name or category or price or brand or image or gender
 productsRouter.put('/:id' , (req, res) => {
 
   const id  = req.params.id;
@@ -71,13 +71,13 @@ productsRouter.put('/:id' , (req, res) => {
 
   pool.query(`UPDATE products SET ${column} = $1 WHERE id = $2`,[newValue, id], (error, results) => {
       if (error) {
-        return res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).send('Internal Server Error' );
       }
 
       if (results.rowCount === 0) {
-        return res.status(404).json({ message: 'Product not found' });
+        return res.status(404).send('Product not found' );
       }
-      res.status(200).json(` product's ${column} updated successfully`)
+      res.status(200).send(` product's ${column} updated successfully`)
   })
 });
 

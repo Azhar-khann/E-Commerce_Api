@@ -13,7 +13,7 @@ ordersRouter.get('/user/:user_id' , (req, res) => {
     const query  = `select orders.order_id, name,size,price,image,date from 
     orders
     join order_details
-    on orders.user_id = order_details.user_id
+    on orders.user_id = order_details.user_id and orders.order_id = order_details.order_id
     join product_sizes 
     on order_details.product_size_id = product_sizes.id 
     join products

@@ -24,7 +24,7 @@ cartRouter.get('/user/:user_id' , (req, res) => {
     pool.query(query, [id], (error, results) => {
 
         if (error) {
-          return res.status(500).json({ error: 'Internal Server Error' });
+          return res.status(500).send('Internal Server Error' );
         }
 
         if (results.rowCount === 0) {
@@ -44,7 +44,7 @@ cartRouter.post('/user/:user_id' , (req, res) => {
     pool.query('insert into cart (user_id,product_size_id) values($1,$2)', [user_id,product_size_id], (error, results) => {
 
         if (error) {
-          return res.status(500).json({ error: 'Internal Server Error' });
+          return res.status(500).send('Internal Server Error' );
         }
 
         res.status(200).send('product successsfully added in user cart')
@@ -61,7 +61,7 @@ cartRouter.put('/user/:user_id/:existing_product_size_id/:new_product_size_id' ,
     pool.query(`UPDATE cart SET product_size_id = $1 WHERE user_id = $2 and product_size_id = $3`, [new_product_size_id, user_id, existing_product_size_id], (error, results) => {
 
         if (error) {
-          return res.status(500).json({ error: 'Internal Server Error' });
+          return res.status(500).send('Internal Server Error' );
         }
 
         if (results.rowCount === 0) {
@@ -81,7 +81,7 @@ cartRouter.delete('/user/:user_id/:product_size_id' , (req, res) => {
     pool.query(`delete from cart where user_id = $1 and product_size_id = $2`,[user_id,existing_product_id],  (error, results) => {
 
         if (error) {
-          return res.status(500).json({ error: 'Internal Server Error' });
+          return res.status(500).send('Internal Server Error' );
         }
 
         if (results.rowCount === 0) {
