@@ -51,21 +51,21 @@ cartRouter.post('/user/:user_id' , (req, res) => {
     })
 });
 
-// update product in user's cart
-cartRouter.put('/user/:user_id/:product_size_id' , (req, res) => {
+// change product in user's cart
+cartRouter.put('/user/:user_id/:existing_product_size_id/:new_product_size_id' , (req, res) => {
 
     const user_id  = req.params.user_id;
-    const existing_product_size_id = req.params.product_size_id;
-    const {product_size_id} = req.body
+    const existing_product_size_id = req.params.existing_product_size_id;
+    const new_product_size_id = req.params.new_product_size_id;
 
-    pool.query(`UPDATE cart SET product_size_id = $1 WHERE user_id = $2 and product_size_id = $3`, [product_size_id, user_id, existing_product_size_id], (error, results) => {
+    pool.query(`UPDATE cart SET product_size_id = $1 WHERE user_id = $2 and product_size_id = $3`, [new_product_size_id, user_id, existing_product_size_id], (error, results) => {
 
         if (error) {
           return res.status(500).json({ error: 'Internal Server Error' });
         }
 
         if (results.rowCount === 0) {
-            return res.status(404).json({ message: 'cart not found' });
+            return res.status(404).send('cart not found' );
         }
 
         res.status(200).send(`user's cart updated successfully`)
@@ -93,7 +93,7 @@ cartRouter.delete('/user/:user_id/:product_size_id' , (req, res) => {
 });
 
 
-cartRouter.get('/user/checkout/:user_id', (req, res) => {
+cartRouter.post('/user/checkout/:user_id', (req, res) => {
 
     const user_id  = req.params.user_id;
     const {date} = req.body;
@@ -106,8 +106,8 @@ cartRouter.get('/user/checkout/:user_id', (req, res) => {
             return res.status(404).send( 'no items in cart' );
         }
         if (isValidCreditCard === true){
-            createOrder(user_id,date)
-            return res.status(200).send( 'Checkout successfull. Order successfully added in user account' );
+            return createOrder(user_id,date,res);
+            
         }
         else{
             return res.status(404).send( 'invalid card details' );

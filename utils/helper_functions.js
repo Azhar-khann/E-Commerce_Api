@@ -20,9 +20,9 @@ function groupDataByOrderId(inputJson) {
   return inputJson.reduce((result, item) => {
     const { order_id, ...rest } = item;
     if (!result[order_id]) {
-      result[order_id] = { order_id, details: [] };
+      result[order_id] = { order_id, items: [] };
     }
-    result[order_id].details.push(rest);
+    result[order_id].items.push(rest);
     return result;
   }, {});
 }
@@ -33,17 +33,38 @@ function validateCreditCard(cardNumber, expirationMonth, expirationYear, cvv) {
 
 }
 
-function createOrder(user_id,date) {
+async function createOrder(user_id,date,res) {
 
-  pool.query('insert into orders (user_id,date) values($1,$2)', [user_id,date], (error, results) => {
+  const addorder =`insert into orders(user_id,date) values($1,$2);`
+  
+  const addOrderDetails = `WITH recent_order AS (
+    SELECT user_id, order_id
+    from orders
+    order by order_id desc
+    limit 1
+  )
+  
+  INSERT INTO order_details (order_id, user_id, product_size_id) 
+  SELECT order_id, cart.user_id, cart.product_size_id
+  FROM cart,recent_order
+  WHERE recent_order.user_id = cart.user_id;`
+  
+  const deleteFromCart = `DELETE FROM cart WHERE user_id = $1;`
 
-    if (error) {
-        throw error;
-    }
+  try {
 
-    
+    await pool.query(addorder, [user_id,date])
 
-  })
+    await pool.query(addOrderDetails)
+
+    await pool.query(deleteFromCart, [user_id])
+
+    return res.status(200).send( 'Checkout successfull. Order successfully added in user account' );
+
+  } catch (error) {
+    throw error;
+  }
+
 }
   
 
