@@ -6,7 +6,12 @@ const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 const pool = require('./db/connect_to_db');
 const passwordHash = require('./utils/helper_functions');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 app.use(express.json());
+
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const productsRouter = require('./routes/products')
 app.use('/products', productsRouter);
