@@ -133,7 +133,7 @@ paths:
           description: Internal Server Errorr
 
     put:
-      summary: Update a product by ID
+      summary: Update a product's name, brand, category, gender,price and image by ID
       tags:
         - Products
       parameters:
@@ -346,7 +346,7 @@ paths:
           description: Internal Server Error
 
     post:
-      summary: Add products to the user's cart
+      summary: Add product to the user's cart
       tags:
         - Cart
       parameters:
